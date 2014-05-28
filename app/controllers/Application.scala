@@ -13,17 +13,21 @@ class TrackActor extends Actor {
   val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S Z")
   def receive = {
     case t:TrackIt =>
+      val entriesExts = List(
+          "track.date"     -> Seq(sdf.format(now)),
+          "remote.address" -> Seq(t.remoteAddress)
+          )
       val msg = 
-        (t.entries + ("track.date"-> Seq(sdf.format(now))))
-         .toList
+        (t.entries.toList ++ entriesExts)
          .flatMap{case (k,s) => s.map(k-> _)}
+         .sortBy{case (k,v) => k}
          .map{case (param, value) => s"$param->$value"}
-         .mkString("NEW TRACKING INFO\n", "\n", "")
+         .mkString("NEW TRACKING INFO\n", "\n", "\n----------------------------------")
       logger.info(msg)
   }
 }
 
-case class TrackIt(entries:Map[String,Seq[String]])
+case class TrackIt(remoteAddress:String, entries:Map[String,Seq[String]])
 
 object Application extends Controller {
 
@@ -36,7 +40,7 @@ object Application extends Controller {
   def track = Action { request =>
     val content = request.body.asFormUrlEncoded
     content.map {entries =>
-      tracker ! TrackIt(entries)
+      tracker ! TrackIt(request.remoteAddress, entries)
       Ok(s"Success - ${entries.size} entries received.\n")
     }.getOrElse {
       BadRequest("Expecting form url encoded body")
