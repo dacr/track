@@ -1,13 +1,9 @@
+
 name := "track"
 
-scalacOptions += "-target:jvm-1.6"
+scalaVersion := "2.11.1"
 
-version := "1.0-SNAPSHOT"
+version := "1.1-SNAPSHOT"
 
-libraryDependencies ++= Seq(
-  jdbc,
-  anorm,
-  cache
-)     
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-play.Project.playScalaSettings
