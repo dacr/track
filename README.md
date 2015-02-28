@@ -20,7 +20,7 @@ docker run \
     spotify/cassandra
 ```
 
-Check stored data directory inside cassandra :
+Check stored data inside cassandra :
 ```bash
 docker exec -it mycassandra cqlsh
 cqlsh> USE tracking ;                    
