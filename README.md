@@ -6,11 +6,12 @@ Events are key/value pairs linked to the origin IP and received timestamp. Event
 
 Simple example requests :
 
-- curl --data "user=me&location=here" http://localhost:9000/track
-- curl --data "user=me&location=here" http://localhost:9000/track/authfail
+- curl --data "hello=world" http://192.168.1.129:9000/track
+- curl --data "testeduser=root&by=10.10.10.10" http://192.168.1.129:9000/track/authfail
 
 
-To start a cassandra database :
+
+Quick start a cassandra database :
 ```bash
 docker run \
    -d \
@@ -20,6 +21,13 @@ docker run \
     spotify/cassandra
 ```
 
+
+Quick start the tracking system (from the project directory once cloned), requires to have [activator](https://www.playframework.com/download) :
+```
+activator run
+```
+
+
 Check stored data inside cassandra :
 ```bash
 docker exec -it mycassandra cqlsh
@@ -27,12 +35,5 @@ cqlsh> USE tracking ;
 cqlsh:tracking> 
 cqlsh:tracking> select * from tracked;
 
- id                                   | timestamp                | category | entries                            | inet
---------------------------------------+--------------------------+----------+------------------------------------+------
- e4ca11e6-2d3b-4aa5-a8d2-e14b9697ee7a | 2015-02-26 22:27:10+0000 |     year | {'location': 'here', 'user': 'me'} |  ::1
-
-(1 rows)
-
-cqlsh:tracking> 
  
 ```
