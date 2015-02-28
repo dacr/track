@@ -38,5 +38,14 @@ cqlsh> USE tracking ;
 cqlsh:tracking> 
 cqlsh:tracking> select * from tracked;
 
+cqlsh:tracking> select * from tracked;
+
+ id                                   | timestamp                | category | entries                                     | inet
+--------------------------------------+--------------------------+----------+---------------------------------------------+---------------
+ b8ab15e4-e7f7-46ae-9b2e-418f41e8cc23 | 2015-02-28 12:47:34+0000 | authfail | {'by': '10.10.10.10', 'testeduser': 'root'} | 192.168.2.222
+ 28f61501-7fcc-4442-bc1d-93d08151d180 | 2015-02-28 12:47:32+0000 |  default |                          {'hello': 'world'} | 192.168.2.222
+
+(2 rows)
+
  
 ```
