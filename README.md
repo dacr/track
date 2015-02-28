@@ -6,8 +6,11 @@ Events are key/value pairs linked to the origin IP and received timestamp. Event
 
 Simple example requests :
 
-- curl --data "hello=world" http://192.168.1.129:9000/track
-- curl --data "testeduser=root&by=10.10.10.10" http://192.168.1.129:9000/track/authfail
+```bash
+curl --data "hello=world" http://192.168.1.129:9000/track
+
+curl --data "testeduser=root&by=10.10.10.10" http://192.168.1.129:9000/track/authfail
+```
 
 
 
