@@ -88,7 +88,7 @@ object TrackRecord extends TrackRecord {
   // TODO : poor implementation
   def distinctIpCount() = select(_.inet).fetch().map(_.distinct.size)
   
-  // TODO : poor implementation
+  // TODO : poor implementation + it fails if the table is empty...
   def latestEventTimestamp() = select(_.timestamp).fetch().map(_.maxBy (_.getMillis))
   
 }
