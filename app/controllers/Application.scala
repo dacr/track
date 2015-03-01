@@ -22,10 +22,14 @@ object Application extends Controller {
   
   def index = Action.async {
     implicit val timeout = Timeout(5.seconds)
-    val futStats = logTracker ? StatsRequest()
-    futStats.map {
-      case s:Stats => Ok(views.html.index(s))
-      case _ => Ok(views.html.index(Stats()))
+    
+    val eventCountFuture = TrackRecord.howmany()
+    
+    for {
+      eventCount <- eventCountFuture
+    } yield {
+      val s = Stats(eventCount.getOrElse(0), 0,None)
+      Ok(views.html.index(s))
     }
     
   }

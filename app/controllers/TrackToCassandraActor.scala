@@ -38,6 +38,7 @@ sealed class TrackRecord extends CassandraTable[TrackRecord, TrackModel] {
   object category extends StringColumn(this)
   object inet extends InetAddressColumn(this)
   object entries extends MapColumn[TrackRecord, TrackModel, String, String](this)
+//  object count extends CounterColumn(this)
 
   override def fromRow(row: Row): TrackModel = {
     TrackModel(id(row), timestamp(row), category(row), inet(row), entries(row));
@@ -56,9 +57,12 @@ object TrackRecord extends TrackRecord {
   }
   Await.result(createTableFuture(), 5000.millis)
   
-  def add(t:TrackThat) = {
+  /**
+   * flatten the map values, add an index as soon that an entry has multiple values
+   */
+  private def flattenMap(in:Map[String, Seq[String]]):List[(String, String)] = {
      val fentries = for {
-       (k,values) <- t.entries.toList
+       (k,values) <- in.toList
        } yield {
        values.toList match {
          case Nil => Nil
@@ -66,15 +70,22 @@ object TrackRecord extends TrackRecord {
          case all => all.zipWithIndex.map{case (v,i) => (k+"."+(i+1)) -> v}
        }
      }
-     insert
+     fentries.flatten    
+  }
+  
+  def add(t:TrackThat) = {
+    insert
         .value(_.id, UUID.randomUUID())
         .value(_.timestamp, new DateTime(t.when))
         .value(_.category, t.category)
         .value(_.inet, InetAddress.getByName(t.remoteAddress))
-        .value(_.entries, fentries.flatten.toMap)
+        .value(_.entries, flattenMap(t.entries).toMap)
         .future()
   }
   
+  def howmany():Future[Option[Long]] = count.one()
+  
+  def distinctIpCount() = select(_.inet)
 }
 
 
@@ -83,7 +94,6 @@ class TrackToCassandraActor extends Actor {
   import scala.concurrent.ExecutionContext.Implicits.global
   
   def receive = {
-    case _:StatsRequest => sender ! Stats(0, None)
     case t:TrackThat =>
       TrackRecord.add(t).onFailure{case x => x.printStackTrace}
   }
