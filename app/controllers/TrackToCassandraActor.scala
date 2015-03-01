@@ -85,7 +85,12 @@ object TrackRecord extends TrackRecord {
   
   def howmany():Future[Option[Long]] = count.one()
   
-  def distinctIpCount() = select(_.inet)
+  // TODO : poor implementation
+  def distinctIpCount() = select(_.inet).fetch().map(_.distinct.size)
+  
+  // TODO : poor implementation
+  def latestEventTimestamp() = select(_.timestamp).fetch().map(_.maxBy (_.getMillis))
+  
 }
 
 

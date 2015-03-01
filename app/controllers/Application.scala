@@ -24,11 +24,14 @@ object Application extends Controller {
     implicit val timeout = Timeout(5.seconds)
     
     val eventCountFuture = TrackRecord.howmany()
-    
+    val ipCountFuture = TrackRecord.distinctIpCount()
+    val lastTimestampFuture = TrackRecord.latestEventTimestamp()
     for {
       eventCount <- eventCountFuture
+      ipCount <- ipCountFuture
+      last <- lastTimestampFuture
     } yield {
-      val s = Stats(eventCount.getOrElse(0), 0,None)
+      val s = Stats(eventCount.getOrElse(0), ipCount, Some(last.toString))
       Ok(views.html.index(s))
     }
     
