@@ -25,9 +25,11 @@ docker run \
 ```
 
 
-Quick start the tracking system (from the project directory once cloned), requires to have [activator](https://www.playframework.com/download) :
+Quick start the tracking system (from the project directory once cloned), 
+requires to have [activator](https://www.playframework.com/download) or [sbt](http://www.scala-sbt.org/):
 ```
-activator run
+activator start
+sbt start
 ```
 
 
