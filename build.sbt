@@ -1,9 +1,9 @@
 
 name := "track"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
-version := "1.1-SNAPSHOT"
+version := "1.2-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
