@@ -35,8 +35,8 @@ sealed class TrackRecord extends CassandraTable[TrackRecord, TrackModel] {
 
   object id extends UUIDColumn(this) with PartitionKey[UUID]
   object timestamp extends DateTimeColumn(this) with ClusteringOrder[DateTime] with Ascending
-  object category extends StringColumn(this)
-  object inet extends InetAddressColumn(this)
+  object category extends StringColumn(this) with PrimaryKey[String]
+  object inet extends InetAddressColumn(this) with PrimaryKey[InetAddress]
   object entries extends MapColumn[TrackRecord, TrackModel, String, String](this)
 //  object count extends CounterColumn(this)
 
