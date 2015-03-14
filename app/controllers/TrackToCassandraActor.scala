@@ -34,11 +34,12 @@ case class TrackModel (
 sealed class TrackRecord extends CassandraTable[TrackRecord, TrackModel] {
 
   object id extends UUIDColumn(this) with PartitionKey[UUID]
-  object timestamp extends DateTimeColumn(this) with ClusteringOrder[DateTime] with Ascending
   object category extends StringColumn(this) with PrimaryKey[String]
   object inet extends InetAddressColumn(this) with PrimaryKey[InetAddress]
+  //object timestamp extends DateTimeColumn(this) with ClusteringOrder[DateTime] with Ascending
+  object timestamp extends DateTimeColumn(this) with PrimaryKey[DateTime]
   object entries extends MapColumn[TrackRecord, TrackModel, String, String](this)
-//  object count extends CounterColumn(this)
+  //object count extends CounterColumn(this)
 
   override def fromRow(row: Row): TrackModel = {
     TrackModel(id(row), timestamp(row), category(row), inet(row), entries(row));
